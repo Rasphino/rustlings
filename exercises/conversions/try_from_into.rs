@@ -11,7 +11,6 @@ struct Color {
     blue: u8,
 }
 
-// I AM NOT DONE
 
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
@@ -26,6 +25,11 @@ struct Color {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = String;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let (red, green, blue) = tuple;
+        match (u8::try_from(red), u8::try_from(green), u8::try_from(blue)) {
+            (Ok(red), Ok(green), Ok(blue)) => Ok(Color {red, green, blue}),
+            _ => Err(String::from("Failed to convert tuple to Color"))
+        }
     }
 }
 
@@ -33,6 +37,8 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = String;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let [red, green, blue] = arr;
+        Color::try_from((red, green, blue))
     }
 }
 
@@ -40,6 +46,10 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = String;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        match slice {
+            &[r, g, b] => Color::try_from((r, g, b)),
+            _ => Err(String::from("Failed to convert"))
+        }
     }
 }
 
